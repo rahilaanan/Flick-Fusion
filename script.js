@@ -4,6 +4,7 @@ const cardContainer = document.getElementById("card-container");
  const error = document.getElementById("error-element");
 
 let selectedCategory = 1000;
+let sortByView = false;
 
 const loadData =async()=>{
 const res = await fetch('https://openapi.programming-hero.com/api/videos/categories');
@@ -13,14 +14,21 @@ info.forEach(info =>{
     //console.log(info)
 
     const newBtn =document.createElement("button");
-    newBtn.className ='btn bg-gray-300'
+    newBtn.className ='btn bg-gray-300 category-btn'
     newBtn.innerText =info.category;
-    newBtn.addEventListener("click",()=> fetchDataByCategories(info.category_id))
+    newBtn.addEventListener("click",()=> {
+        fetchDataByCategories(info.category_id);
+const allBtn =document.querySelectorAll(".category-btn");
+for(const btn of allBtn){
+btn.classList.remove("!bg-red-600");
+}
+newBtn.classList.add("!bg-red-600", "text-white")
+    })
     buttonContainer.appendChild(newBtn); 
    
 })
 
-function fetchDataByCategories(categoryID){
+function fetchDataByCategories(categoryID ,sortByView){
     selectedCategory =categoryID;
    const loadCardData =async(id)=>{
     const res = await fetch(`https://openapi.programming-hero.com/api/videos/category/${categoryID}`);
@@ -40,8 +48,8 @@ verified = `<img src="https://cdn-icons-png.flaticon.com/128/4847/4847039.png" l
         
         const newCard =document.createElement("div");
         newCard.innerHTML =`
-        <div class="card card-compact bg-base-100 ">
-            <figure><img class="" src="${cards.thumbnail}" alt="Shoes" /></figure>
+        <div class=" card card-compact bg-base-100 ">
+            <img class="object-cover " src="${cards.thumbnail}" alt="Shoes" />
             <div class="card-body">
               <div class="flex gap-6 items-center justify-start">
                 <img class="rounded-full h-12 w-12"  src="${cards.authors[0].profile_picture}" alt="">
@@ -63,7 +71,7 @@ verified = `<img src="https://cdn-icons-png.flaticon.com/128/4847/4847039.png" l
    }
    loadCardData()
 }
-fetchDataByCategories(selectedCategory);
+fetchDataByCategories(selectedCategory, sortByView);
 }
 
 
